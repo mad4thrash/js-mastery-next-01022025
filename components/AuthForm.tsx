@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
 	DefaultValues,
 	FieldValues,
+	Path,
 	SubmitHandler,
 	useForm,
 	UseFormReturn,
@@ -22,6 +23,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "./ui/input";
 import Link from "next/link";
+import { FIELD_NAMES, FIELD_TYPES } from "@/constants";
+import ImageUpload from "./ImageUpload";
 
 interface Props<T extends FieldValues> {
 	schema: ZodType<T>;
@@ -59,23 +62,39 @@ const AuthForm = <T extends FieldValues>({
 					onSubmit={form.handleSubmit(handleSubmit)}
 					className="space-y-6 w-full"
 				>
-					<FormField
-						control={form.control}
-						name="username"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Username</FormLabel>
-								<FormControl>
-									<Input placeholder="shadcn" {...field} />
-								</FormControl>
-								<FormDescription>
-									This is your public display name.
-								</FormDescription>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<Button type="submit">Submit</Button>
+					{Object.keys(defaultValues).map((field) => (
+						<FormField
+							key={field}
+							control={form.control}
+							name={field as Path<T>}
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel className="capitalize">
+										{FIELD_NAMES[field.name as keyof typeof FIELD_NAMES]}
+									</FormLabel>
+									<FormControl>
+										{field.name === "universityCard" ? (
+											<ImageUpload onFileChange={field.onChange} />
+										) : (
+											<Input
+												required
+												type={
+													FIELD_TYPES[field.name as keyof typeof FIELD_TYPES]
+												}
+												{...field}
+												className="form-input"
+											/>
+										)}
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+					))}
+
+					<Button type="submit" className="form-btn">
+						{isSignIn ? "Sign in" : "Sign up"}
+					</Button>
 				</form>
 			</Form>
 			<p className="text-center text-base font-medium">
