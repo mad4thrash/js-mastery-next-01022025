@@ -7,7 +7,7 @@ const imagekit = new ImageKit({
     privateKey: config.env.imageKit.privateKey,
     urlEndpoint: config.env.imageKit.urlEndpoint
 });
-
+/*dio santo*/
 export async function GET(){
     return NextResponse.json(imagekit.getAuthenticationParameters())
 }
