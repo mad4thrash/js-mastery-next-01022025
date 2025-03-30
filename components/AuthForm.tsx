@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -34,6 +34,10 @@ interface Props<T extends FieldValues> {
 	type: "SIGN_IN" | "SIGN_UP";
 }
 
+const Spinner = () => (
+	<div className="h-4 w-4 rounded-full border-2 border-t-transparent border-primary animate-spin"></div>
+);
+
 const AuthForm = <T extends FieldValues>({
 	type,
 	schema,
@@ -48,18 +52,22 @@ const AuthForm = <T extends FieldValues>({
 		defaultValues: defaultValues as DefaultValues<T>,
 	});
 
+	const [isLoading, setIsLoading] = useState(false);
+
 	const handleSubmit: SubmitHandler<T> = async (data) => {
+		setIsLoading(true);
 		const result = await onSubmit(data);
 
 		if (result.success) {
+			setIsLoading(false);
 			toast.success(
 				isSignIn
 					? "You have successfully signed in."
 					: "You have successfully signe up."
 			);
-
 			router.push("/");
 		} else {
+			setIsLoading(false);
 			toast.error(`Error ${isSignIn ? "signing in" : "signing up"}`);
 		}
 	};
@@ -109,7 +117,14 @@ const AuthForm = <T extends FieldValues>({
 					))}
 
 					<Button type="submit" className="form-btn">
-						{isSignIn ? "Sign in" : "Sign up"}
+						{isLoading ? (
+							<>
+								<Spinner />
+								{isSignIn ? "Signing in..." : "Signing up..."}
+							</>
+						) : (
+							<>{isSignIn ? "Sign in" : "Sign up"}</>
+						)}
 					</Button>
 				</form>
 			</Form>
