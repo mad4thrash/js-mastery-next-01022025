@@ -12,9 +12,11 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 import { bookSchema } from "@/lib/validations";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import FileUpload from "@/components/FileUpload";
+import ColorPicker from "../ColorPicker";
 
 interface Props extends Partial<Book> {
 	type: "create" | "update";
@@ -25,8 +27,6 @@ const Spinner = () => (
 );
 
 const BookForm = ({ type, ...book }: Props) => {
-	const router = useRouter();
-
 	const form = useForm<z.infer<typeof bookSchema>>({
 		resolver: zodResolver(bookSchema),
 		defaultValues: {
@@ -36,7 +36,7 @@ const BookForm = ({ type, ...book }: Props) => {
 			rating: 1,
 			totalCopies: 1,
 			description: "",
-			corverUrl: "",
+			coverUrl: "",
 			coverColor: "",
 			videoUrl: "",
 			summary: "",
@@ -140,6 +140,100 @@ const BookForm = ({ type, ...book }: Props) => {
 						</FormItem>
 					)}
 				/>
+				<FormField
+					control={form.control}
+					name={"coverUrl"}
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel className="capitalize">book cover</FormLabel>
+							<FormControl>
+								<FileUpload
+									type="image"
+									accept="image/*"
+									placeholder="Upload a cover"
+									folder="books/covers"
+									variant="light"
+									onFileChange={field.onChange}
+									value={field.value}
+								/>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<FormField
+					control={form.control}
+					name={"coverColor"}
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel className="capitalize">primary color</FormLabel>
+							<FormControl>
+								<ColorPicker />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<FormField
+					control={form.control}
+					name={"description"}
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel className="capitalize">book description</FormLabel>
+							<FormControl>
+								<Textarea
+									className="book-form_input"
+									rows={10}
+									placeholder="Book Description"
+									{...field}
+								/>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<FormField
+					control={form.control}
+					name={"videoUrl"}
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel className="capitalize">book trailer</FormLabel>
+							<FormControl>
+								<FileUpload
+									type="video"
+									accept="video/*"
+									placeholder="Upload a trailer"
+									folder="books/videos"
+									variant="light"
+									onFileChange={field.onChange}
+									value={field.value}
+								/>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<FormField
+					control={form.control}
+					name={"summary"}
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel className="capitalize">book summary</FormLabel>
+							<FormControl>
+								<Textarea
+									className="book-form_input"
+									rows={5}
+									placeholder="Book Summary"
+									{...field}
+								/>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<Button type="submit" className="book-form_btn text-white">
+					Add Book to Library
+				</Button>
 			</form>
 		</Form>
 	);
