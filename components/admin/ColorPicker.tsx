@@ -1,13 +1,23 @@
 import { HexColorPicker, HexColorInput } from "react-colorful";
-import { useState } from "react";
 
-const ColorPicker = () => {
-	const [color, setColor] = useState("#aabbcc");
+type Props = {
+	value?: string;
+	onPickerChange: (color: string) => void;
+};
+
+const ColorPicker = ({ value, onPickerChange }: Props) => {
 	return (
-		<>
-			<HexColorPicker color={color} onChange={setColor} />
-			<HexColorInput color={color} onChange={setColor} />
-		</>
+		<div className="relative">
+			<HexColorPicker color={value} onChange={onPickerChange} />
+			<div className="flex items-center mt-2">
+				<p>#</p>
+				<HexColorInput
+					color={value}
+					onChange={onPickerChange}
+					className="hex-input"
+				/>
+			</div>
+		</div>
 	);
 };
 

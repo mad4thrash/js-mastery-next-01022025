@@ -42,7 +42,9 @@ const BookForm = ({ type, ...book }: Props) => {
 			summary: "",
 		},
 	});
-	const onSubmit = async (values: z.infer<typeof bookSchema>) => {};
+	const onSubmit = async (values: z.infer<typeof bookSchema>) => {
+		console.log(values);
+	};
 	return (
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -168,7 +170,10 @@ const BookForm = ({ type, ...book }: Props) => {
 						<FormItem>
 							<FormLabel className="capitalize">primary color</FormLabel>
 							<FormControl>
-								<ColorPicker />
+								<ColorPicker
+									onPickerChange={field.onChange}
+									value={field.value}
+								/>
 							</FormControl>
 							<FormMessage />
 						</FormItem>
