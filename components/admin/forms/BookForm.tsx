@@ -17,6 +17,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import FileUpload from "@/components/FileUpload";
 import ColorPicker from "../ColorPicker";
+import { createBook } from "@/lib/admin/actions/book";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface Props extends Partial<Book> {
 	type: "create" | "update";
@@ -42,8 +45,19 @@ const BookForm = ({ type, ...book }: Props) => {
 			summary: "",
 		},
 	});
+
+	const router = useRouter();
+
 	const onSubmit = async (values: z.infer<typeof bookSchema>) => {
-		console.log(values);
+		const result = await createBook(values);
+
+		if (result.success) {
+			toast.success("Book create successfully");
+
+			router.push(`/admin/books/${result.data.id}`);
+		} else {
+			toast.error(result.message);
+		}
 	};
 	return (
 		<Form {...form}>
