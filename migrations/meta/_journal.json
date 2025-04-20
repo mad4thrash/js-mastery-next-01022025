@@ -15,6 +15,13 @@
       "when": 1745077673796,
       "tag": "0001_tiresome_diamondback",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1745161809478,
+      "tag": "0002_colossal_ikaris",
+      "breakpoints": true
     }
   ]
 }
